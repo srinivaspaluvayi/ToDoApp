@@ -1,0 +1,23 @@
+{
+  "name": "todoapp",
+  "version": "1.0.0",
+  "description": "To Do Application with advanced features like prioritizing the tasks and sending notifications about reminders.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srinivaspaluvayi/ToDoApp.git"
+  },
+  "keywords": [
+    "ToDoApp"
+  ],
+  "author": "Manideep &  Srinivas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srinivaspaluvayi/ToDoApp/issues"
+  },
+  "homepage": "https://github.com/srinivaspaluvayi/ToDoApp#readme"
+}
