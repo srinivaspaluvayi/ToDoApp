@@ -19,9 +19,16 @@ function App() {
   };
 
   return (
-    (isUserSignedIn) || (
-      <Login onLoginSuccessful={onLoginSuccessful} />
-    )
+    <div className="App">
+      {isUserSignedIn ? (
+        <div>
+          <h1>Welcome, {localStorage.getItem("name") || "User"}!</h1>
+          <button onClick={onLogout}>Logout</button>
+        </div>
+      ) : (
+        <Login onLoginSuccessful={onLoginSuccessful} />
+      )}
+    </div>
   );
 }
 
