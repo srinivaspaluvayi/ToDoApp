@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const path = require("path");   
+const path = require("path");
 const userRoutes = require("./router/router");
 
 const app = express();
@@ -14,18 +14,13 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //public data
-app.use(
-  express.static(path.join(__dirname, "./client/build"))
-);
-
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 //routes
 app.use(userRoutes);
 
 app.get("*", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "./client/build/index.html")
-  )
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
 //server listening at 5000
