@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Alert, Card } from "react-bootstrap";
 
-
 export async function login({ email, password }) {
   return await fetch("/login", {
     method: "POST",
@@ -35,10 +34,12 @@ function Login({ onLoginSuccessful }) {
     const loginResult = await login({ email, password });
     if (!loginResult) setHasError(true);
     else {
-      const { name, token } = loginResult;
+      const { email, token } = loginResult;
       // Save user IDs on local storage
-      localStorage.setItem("name", name);
+      localStorage.setItem("email", email);
       localStorage.setItem("token", token);
+      // console.log(localStorage.getItem("email"));
+      console.log(localStorage.getItem("token"));
       onLoginSuccessful();
     }
   };
@@ -56,6 +57,7 @@ function Login({ onLoginSuccessful }) {
                 placeholder="Enter email"
                 onChange={onEmailChange}
                 value={email}
+                required
               />
               <Form.Text className="text-muted">
                 We'll never share your email with anyone else.
