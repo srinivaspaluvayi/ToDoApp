@@ -1,30 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Login from "./Login";
+import Home from "./components/Home";
 
 function App() {
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
-  useEffect(() => {
-    if (localStorage.getItem("token")) setIsUserSignedIn(true);
-    else setIsUserSignedIn(false);
-  }, []);
+  // Immediately check localStorage for a token when initializing state.
+  const [isUserSignedIn, setIsUserSignedIn] = useState(
+    !!localStorage.getItem("token")
+  );
 
   const onLoginSuccessful = () => {
     setIsUserSignedIn(true);
   };
 
   const onLogout = () => {
-    localStorage.removeItem("name");
-    localStorage.removeItem("token");
+    localStorage.clear();
     setIsUserSignedIn(false);
   };
 
   return (
     <div className="App">
       {isUserSignedIn ? (
-        <div>
-          <h1>Welcome, {localStorage.getItem("name") || "User"}!</h1>
-          <button onClick={onLogout}>Logout</button>
-        </div>
+        <Home onLogout={onLogout} />
       ) : (
         <Login onLoginSuccessful={onLoginSuccessful} />
       )}
