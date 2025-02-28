@@ -1,19 +1,36 @@
+const mongoose = require('mongoose');
 
-const checkCredentials =  function(email, password, callback){
-    const eId = "abc@gmail.com";
-    const pwd = "1234";
-    console.log(email, password);
-    if(email===eId && password===pwd){
-        callback(true);
-    }
-    else{
+const userSchema = new mongoose.Schema({
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    Key: { type: String, required: true, unique: true }
+});
+
+const User = mongoose.model('Users', userSchema);
+
+const checkCredentials = async function(email, password, callback) {
+    try {
+
+        const user = await User.findOne({ email: email });
+        
+        if (user && user.password === password) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    } catch (err) {
+        console.log(err);
         callback(false);
     }
-}
-const Credential = class Credential{
+};
+
+
+
+const Credential = class Credential {
     static verifyCredentials(email, password, callback) {
         checkCredentials(email, password, callback);
     }
-}
+};
+
 
 module.exports = Credential;
