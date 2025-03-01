@@ -4,7 +4,7 @@ const userController = require("../controller/controller");
 
 Router.post("/login", userController.postVerifyLogin);
 
-Router.get("/home", userController.getHome);
+Router.get("/home/:key", userController.getHome);
 
 Router.post("/addTask", userController.postAddTask);
 

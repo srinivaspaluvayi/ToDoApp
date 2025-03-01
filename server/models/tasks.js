@@ -2,30 +2,41 @@ const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
     key: { type: String, required: true },
-    tasks: { type: Array, required:true}
-});
+    tasks: { type: Array, required: true }
+}, { versionKey: false });
 
-const Task = mongoose.model('Tasks', taskSchema);
+const Tasks = mongoose.model('Tasks', taskSchema);
 
-const addTasks = function(task, callback) {
-    const newTask = new Task(task);
-    newTask.save((err) => {
-        if (err) {
-            callback(false);
-        } else {
-            callback(true);
+const addTasks = async function(taskDetails, callback) {
+    try {
+        // Find the document with the given key
+        const userTaskDetails = await Tasks.findOne({ key: taskDetails.key });
+
+        if (!userTaskDetails) {
+            callback(false); // If no document found, return false
+            return;
         }
-    });
+
+        const newTask = { taskName: taskDetails.taskName, completion: false };
+
+        userTaskDetails.tasks.push(newTask);
+
+        await userTaskDetails.save();
+
+        callback(true); 
+    } catch (err) {
+        console.error("Error saving task:", err);
+        callback(false); 
+    }
 };
 
 const getTasks = async function(key, callback) {
-    try{
-        const userTasks = await Task.findOne({ key: key });
+    try {
+        const userTasks = await Tasks.findOne({ key: key });
         callback(userTasks.tasks);
-    }
-    catch(err) {
+    } catch (err) {
         callback([]);
     }
 };
 
-module.exports = { Task, addTasks, getTasks };
+module.exports = { Tasks, addTasks, getTasks };

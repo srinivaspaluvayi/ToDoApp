@@ -21,8 +21,5 @@
   "bugs": {
     "url": "https://github.com/srinivaspaluvayi/ToDoApp/issues"
   },
-  "dependencies": {
-    "mongodb": "^6.13.1",
-    "mongoose": "^8.11.0"
-  }
+  "dependencies": {}
 }
