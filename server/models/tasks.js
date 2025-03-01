@@ -1,11 +1,4 @@
-const mongoose = require('mongoose');
-
-const taskSchema = new mongoose.Schema({
-    key: { type: String, required: true },
-    tasks: { type: Array, required: true }
-}, { versionKey: false });
-
-const Tasks = mongoose.model('Tasks', taskSchema);
+const {Tasks} = require("../db/Tasks");
 
 const addTasks = async function(taskDetails, callback) {
     try {
@@ -39,4 +32,15 @@ const getTasks = async function(key, callback) {
     }
 };
 
-module.exports = { Tasks, addTasks, getTasks };
+const addUser = async function(key, callback) {
+    try{
+        const userTaskDetails = new Tasks({ key: key, tasks: [] });
+        await userTaskDetails.save();
+        callback(true);
+    }
+    catch(err){
+        callback(false);
+    }
+}
+
+module.exports = { Tasks, addTasks, getTasks, addUser };

@@ -8,4 +8,6 @@ Router.get("/home/:key", userController.getHome);
 
 Router.post("/addTask", userController.postAddTask);
 
+Router.post("/register", userController.postRegisterUser);
+
 module.exports = Router;
