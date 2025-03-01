@@ -7,14 +7,13 @@ exports.postVerifyLogin = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     Credential.verifyCredentials(email, password, (result) => {
-        // console.log(result);
-
         if (result) {
+            const key = result;
             const token = jwt.sign(
-                { email: email },
+                { email: email, key: key },
                 JWT_SECRET="ToDoAppToken"
             );
-            res.json({ email, token });
+            res.json({ email, key, token });
         } else {
             res.status(401).json({ message: "Invalid credentials" });
         }
@@ -22,7 +21,7 @@ exports.postVerifyLogin = (req, res, next) => {
 };
 
 exports.getHome = (req, res, next) => {
-    const key = req.body.key;
+    const key = req.params.key;
     Task.getTasks(key, (tasks) => {
         res.json({ tasks });
     });
@@ -30,12 +29,17 @@ exports.getHome = (req, res, next) => {
 
 exports.postAddTask = (req, res, next) => {
     const taskName = req.body.taskName;
-    const task = new Task(taskName);
-    addTasks(task, (success) => {
+    const key = req.body.key;
+    const taskDetails = {
+        taskName: taskName,
+        key: key
+    };
+    Task.addTasks(taskDetails, (success) => {
         if (success) {
-            res.status(201).json({ message: "Task added successfully", task });
+        res.status(201).redirect(`/home/${key}`);
+
         } else {
-            res.status(500).json({ message: "Failed to add task" });
+        res.status(500).redirect(`/home/${key}`);
         }
     });
 };
