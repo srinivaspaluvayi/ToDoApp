@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const Credential = require("../models/credentials");
 const Task = require("../models/tasks");
+const randomKeyGen = require("../util/keyGenerator");
 
 exports.postVerifyLogin = (req, res, next) => {
     const email = req.body.email;
@@ -40,6 +41,41 @@ exports.postAddTask = (req, res, next) => {
 
         } else {
         res.status(500).redirect(`/home/${key}`);
+        }
+    });
+};
+
+
+exports.postRegisterUser = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    
+    Credential.isUserRegistered(email, (result) =>{
+        try{
+            if(result) {
+                res.status(400).json({ message: "User already registered" });
+            }
+            else{
+                const key = randomKeyGen(email, password);
+                Credential.addUser(email, password, key, (userAdded)=>{
+                    if(userAdded){
+                        Task.addUser(key, (userTaskCreated)=>{
+                            if(userTaskCreated){
+                                res.redirect("/");
+                            }
+                            else{
+                                res.redirect("/");
+                            }
+                        })
+                    }
+                    else{
+                        res.redirect("/");
+                    }
+                });
+            }
+        }
+        catch(e){
+            res.redirect("/");
         }
     });
 };
