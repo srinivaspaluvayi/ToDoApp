@@ -1,36 +1,24 @@
 {
-  "name": "todoapp",
+  "name": "basic_auth",
   "version": "1.0.0",
-  "description": "To Do Application with advanced features like prioritizing the tasks and sending notifications about reminders.",
-  "main": "app.js",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "start-server": "nodemon app.js"
+    "start": "nodemon server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/srinivaspaluvayi/ToDoApp.git"
-  },
-  "keywords": [
-    "ToDoApp"
-  ],
-  "author": "Manideep & Srinivas",
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/srinivaspaluvayi/ToDoApp/issues"
-  },
-  "homepage": "https://github.com/srinivaspaluvayi/ToDoApp#readme",
   "dependencies": {
-    "body-parser": "^1.20.3",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.11.0"
-  },
-  "devDependencies": {
+    "mongodb": "^6.14.2",
+    "mongoose": "^8.12.1",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9"
   }
 }
