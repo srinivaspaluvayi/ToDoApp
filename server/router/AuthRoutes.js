@@ -12,10 +12,6 @@ import {
 import userauth from "../middleware/usermiddleware.js";
 const Authrouter = express.Router();
 
-// Authrouter.get("/", (req, res) => {
-//   res.send("Hello World!");
-// });
-
 Authrouter.post("/register", register);
 Authrouter.post("/login", login);
 Authrouter.post("/logout", logout);
