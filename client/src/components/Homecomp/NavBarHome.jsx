@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import { assets } from "../../assets/assets";
-
+import { useNavigate } from "react-router-dom";
 export const NavBarHome = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -35,14 +35,17 @@ export const NavBarHome = () => {
 
           {/* Login & CTA Button */}
           <div className="hidden md:flex items-center space-x-6">
-            <button className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition"
-              onClick={() => navigate("/login")}>
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition"
+            >
               Login
             </button>
-            <button className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition"
-              onClick={() => navigate("/register")}>
+            <button
+              onClick={() => navigate("/register")}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-600 transition"
+            >
               SignUp
-
             </button>
           </div>
 
@@ -77,10 +80,16 @@ export const NavBarHome = () => {
           >
             Pricing
           </a>
-          <button className="w-full bg-red-500 text-white py-3 rounded-lg mt-2 hover:bg-red-600 transition">
+          <button
+            onClick={() => navigate("/login")}
+            className="w-full bg-red-500 text-white py-3 rounded-lg mt-2 hover:bg-red-600 transition"
+          >
             Login
           </button>
-          <button className="w-full bg-red-500 text-white py-3 rounded-lg mt-2 hover:bg-red-600 transition">
+          <button
+            onClick={() => navigate("/register")}
+            className="w-full bg-red-500 text-white py-3 rounded-lg mt-2 hover:bg-red-600 transition"
+          >
             SignIn
           </button>
         </div>
