@@ -1,6 +1,9 @@
 import React from "react";
 import { assets } from "../../assets/assets";
+import { useNavigate } from "react-router";
+
 export const BodyHome = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white min-h-screen flex flex-col justify-center items-center px-6 py-12">
       <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -20,7 +23,10 @@ export const BodyHome = () => {
             <span className="mx-1">★★★★★ reviews from</span>
             <span className="ml-2">🍏 🐰</span>
           </div>
-          <button className="mt-6 bg-red-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-red-600 transition">
+          <button
+            onClick={() => navigate("/login")}
+            className="mt-6 bg-red-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-red-600 transition"
+          >
             Start for free
           </button>
         </div>
