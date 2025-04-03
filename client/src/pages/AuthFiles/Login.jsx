@@ -1,10 +1,50 @@
-
-import React from "react";
-import { assets } from "../assets/assets";
+import React, { useContext, useState } from "react";
+import { assets } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
-
+import { AppContent } from "../../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
+axios.defaults.withCredentials = true;
 const Login = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { backendUrl, setIsLogged, getUserData } = useContext(AppContent);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `${backendUrl}/auth/login`,
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      const data = response.data;
+      // console.log(data.success);
+      if (data.success) {
+        setIsLogged(true);
+        navigate("/afterLoggedIn");
+        await getUserData();
+        // await setTasks();
+      } else {
+        console.log("inside try and chuwe");
+        toast.error(data.message || "Login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(
+        error.response?.data?.message || "An error occurred during login."
+      );
+    }
+  };
+
   return (
     <section class="bg-gray-50 dark:bg-gray-900">
       <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -20,7 +60,11 @@ const Login = () => {
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to your account
             </h1>
-            <form class="space-y-4 md:space-y-6" action="#">
+            <form
+              class="space-y-4 md:space-y-6"
+              action="#"
+              onSubmit={handleSubmit}
+            >
               <div>
                 <label
                   htmlFor="email"
@@ -35,6 +79,8 @@ const Login = () => {
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   required=""
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
               </div>
               <div>
@@ -51,8 +97,11 @@ const Login = () => {
                   placeholder="••••••••"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required=""
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                 />
               </div>
+
               <div class="flex items-center justify-between">
                 <div class="flex items-start">
                   <div class="flex items-center h-5">
@@ -76,6 +125,7 @@ const Login = () => {
                 <a
                   href="#"
                   class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  onClick={() => navigate("/reset-password")}
                 >
                   Forgot password?
                 </a>

@@ -1,7 +1,65 @@
-import React from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { FaSearch, FaBell } from "react-icons/fa";
 import { assets } from "../assets/assets";
+import { AppContent } from "../context/AppContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const { userData, setIsLogged, setUserData, backendUrl } =
+    useContext(AppContent);
+
+  const adjustedUserName = (userData) => {
+    if (!userData?.name) return "";
+    const firstWord = userData.name.trim().split(" ")[0];
+    return firstWord.charAt(0).toUpperCase() + firstWord.slice(1);
+  };
+
+  const logout = async () => {
+    try {
+      const { data } = await axios.post(backendUrl + "/auth/logout", {
+        withCredentials: true,
+      });
+      data.success && setIsLogged(false);
+      data.success && setUserData(false);
+      // data.
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Unable to logged Out");
+    }
+  };
+
+  const verifyEmail = async () => {
+    try {
+      const { data } = await axios.post(backendUrl + "/auth/sendverifyotp");
+      console.log(data.success);
+      if (data.success) {
+        navigate("/email-verify");
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Unable to logged Out");
+    }
+  };
+
   return (
     <div>
       <nav
@@ -32,16 +90,34 @@ function Navbar() {
         {/* Right Section - Notification, Profile, Button */}
         <div className="flex items-center gap-4 p-4">
           <FaBell className="text-gray-500 hover:text-blue-500 cursor-pointer text-lg" />
+          <h3>Hello {adjustedUserName(userData)}!</h3>
+          <div className="relative inline-block text-left" ref={menuRef}>
+            {/* Avatar (click toggles dropdown) */}
+            <img
+              src={assets.profile}
+              alt="User"
+              className="w-12 h-12 rounded-full cursor-pointer"
+              onClick={() => setIsOpen((prev) => !prev)}
+            />
 
-          <img
-            src={assets.profile} // Replace with user avatar
-            alt="User"
-            className="w-10 h-10 rounded-full object-cover"
-          />
-
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-            Login
-          </button>
+            {/* Dropdown */}
+            {isOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg z-50">
+                <div
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={verifyEmail}
+                >
+                  Verify Email
+                </div>
+                <div
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={logout}
+                >
+                  Logout
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
     </div>
