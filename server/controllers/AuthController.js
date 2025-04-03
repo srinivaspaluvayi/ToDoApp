@@ -40,7 +40,9 @@ export const register = async (req, res) => {
     await transporter.sendMail(sendingmail);
     // res.status(201).json({ message: "mail sent" });
     // console.log("mail sent");
-    return res.status(201).json({ message: "User created successfully" });
+    return res
+      .status(201)
+      .json({ success: true, message: "User created successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -63,11 +65,11 @@ export const login = async (req, res) => {
     res.cookie("token", token, {
       expiresIn: "7d",
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "Lax",
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-    return res.status(200).json({ message: "Login successful" });
+    return res.status(200).json({ success: true, message: "Login successful" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -77,7 +79,7 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "Lax",
       secure: false,
     });
 
@@ -109,7 +111,9 @@ export const sendVerifyOtp = async (req, res) => {
       text: `Hello ${user.name}, your OTP for account verification is ${user.verifyOtp}`,
     };
     await transporter.sendMail(sendingmail);
-    return res.status(200).json({ message: "OTP sent successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP sent successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -139,7 +143,9 @@ export const verifyOtp = async (req, res) => {
     user.verifyOtpExpiresAt = 0;
 
     await user.save();
-    return res.status(200).json({ message: "OTP verified successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP verified successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -173,7 +179,9 @@ export const sendResetPasswordOtp = async (req, res) => {
       text: `Hello ${user.name}, your OTP for password reset is ${user.resetOtp}`,
     };
     await transporter.sendMail(mailOptions);
-    return res.status(200).json({ message: "OTP sent successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP sent successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -197,7 +205,9 @@ export const resetPassword = async (req, res) => {
     user.resetOtp = "";
     user.resetOtpExpiresAt = null;
     await user.save();
-    return res.status(200).json({ message: "Password reset successful" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Password reset successful" });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }

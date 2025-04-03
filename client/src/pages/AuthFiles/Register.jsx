@@ -1,13 +1,52 @@
-import React from "react";
-import { useState } from "react";
-import { assets } from "../assets/assets";
+import React, { useContext, useState } from "react";
+import { assets } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
+import { AppContent } from "../../context/AppContext";
+import axios from "axios";
+import { evaluatePasswordStrength } from "../../utils/evaluatePasswordStrength";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [ConfirmPassword, setConfirmPassword] = useState("");
+  const { level, color, score } = evaluatePasswordStrength(password);
+  const { backendUrl, setIsLogged, getUserData } = useContext(AppContent);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== ConfirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${backendUrl}/auth/register`, {
+        name,
+        email,
+        password: password,
+      });
+
+      const data = response.data;
+      console.log(data);
+
+      if (data.success) {
+        // Handle post-registration success
+        getUserData();
+        navigate("/login");
+      } else {
+        alert("Registration failed");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+    <section class="bg-gray-50 dark:bg-gray-900">
+      <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           onClick={() => navigate("/")}
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white cursor-pointer"
@@ -20,7 +59,11 @@ const Register = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create your account
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form
+              className="space-y-4 md:space-y-6"
+              action="#"
+              onSubmit={handleSubmit}
+            >
               <div>
                 <label
                   htmlFor="name"
@@ -35,6 +78,8 @@ const Register = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="John Doe"
                   required
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                 />
               </div>
               <div>
@@ -51,6 +96,8 @@ const Register = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   required
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
               </div>
               <div>
@@ -67,6 +114,39 @@ const Register = () => {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                />
+                {password && (
+                  <div className="mt-2">
+                    <div className="w-full bg-gray-200 h-2 rounded">
+                      <div
+                        className={`h-2 rounded ${color}`}
+                        style={{ width: `${(score / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-sm mt-1 text-gray-600">
+                      Strength: <span className="font-semibold">{level}</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div>
+                <label
+                  htmlFor="ConfirmPassword"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="Confirmpassword"
+                  id="Confirmpassword"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  value={ConfirmPassword}
                 />
               </div>
               <div className="flex items-center">
